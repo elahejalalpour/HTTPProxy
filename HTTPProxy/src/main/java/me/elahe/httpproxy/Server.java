@@ -1,81 +1,79 @@
+/*
+ * In The Name Of God
+ * ========================================
+ * [] File Name : Server.java
+ *
+ * [] Creation Date : 28-08-2015
+ *
+ * [] Created By : Elahe Jalalpour (el.jalalpour@gmail.com)
+ * =======================================
+*/
+/**
+ * @author Elahe Jalalpour
+ */
 package me.elahe.httpproxy;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextArea;
 
-/**
- *
- * @author elahe jalalpoor
- */
 public class Server implements Runnable {
 
-    private ArrayList<String> blocked;
-    JTextArea txtLog;
-    private boolean running ;
-    private int port ;
+	private ArrayList<String> blocked;
+	JTextArea txtLog;
+	private boolean running;
+	private int port;
 
-    ServerSocket ss;
-    public Server(JTextArea txtLog,int port ) {
-        blocked = new ArrayList<>();     
-        this.running = false;
-        this.port = port ;
-    }
+	ServerSocket ss;
 
-    public void setBlocked(ArrayList blockedA) {
-        blocked = blockedA;
-    }
+	public Server(int port) {
+		blocked = new ArrayList<>();
+		this.running = false;
+		this.port = port;
+	}
 
-    @Override
-    public void run() {
-        try {
-            ss = new ServerSocket(port);
-            long index = 0 ;
-            while (running) {
-                try {
-                    Socket client = ss.accept();
-                    index ++ ;
-                    Client c = new Client ( index, client , txtLog , blocked );
-                    c.start();
-                } // Now loop again, waiting for the next connection
-                catch (Exception e) {
-                }
-            } // If anything goes wrong, print an error message
-            ss.close();
-        } catch (IOException ex) {
-        }
-    }
+	public void setBlocked(ArrayList<String> blocked) {
+		this.blocked = blocked;
+	}
 
-    void startServer(int portNumber) {
-        running = true ;
-        port = portNumber;
-        new Thread(this).start();
-    }
+	@Override
+	public void run() {
+		try {
+			ss = new ServerSocket(port);
+			while (running) {
+				try {
+					Socket client = ss.accept();
+					Client c = new Client(client, txtLog, blocked);
+					c.start();
+				} // Now loop again, waiting for the next connection
+				catch (Exception e) {
+					e.printStackTrace();
+				}
+			} // If anything goes wrong, print an error message
+			ss.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    void stopServer() {
-        running = false ;
-        try {
-            ss.close();
-        } catch (IOException ex) {
-        }
-    }
-    
-    public static void main(String[] args) {
-        
-            GUI Window;
-        try {
-            Window = new GUI();
-            Window.setVisible(true);
-            Window.setSize(1000, 1000);
-        } catch (IOException ex) {
-            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-        
-    
-    }
+	void startServer(int portNumber) {
+		running = true;
+		port = portNumber;
+		new Thread(this).start();
+	}
+
+	public static void main(String[] args) {
+		HttpGUI Window;
+		try {
+			Window = new HttpGUI();
+			Window.setVisible(true);
+			Window.setSize(1000, 1000);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
 }
