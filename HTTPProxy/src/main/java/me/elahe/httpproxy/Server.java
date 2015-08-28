@@ -28,10 +28,11 @@ public class Server implements Runnable {
 
 	ServerSocket ss;
 
-	public Server(int port) {
+	public Server(JTextArea txtLog, int port) {
 		blocked = new ArrayList<>();
 		this.running = false;
 		this.port = port;
+		this.txtLog = txtLog;
 	}
 
 	public void setBlocked(ArrayList<String> blocked) {
@@ -65,9 +66,9 @@ public class Server implements Runnable {
 	}
 
 	public static void main(String[] args) {
-		HttpGUI Window;
+		HTTPFrame Window;
 		try {
-			Window = new HttpGUI();
+			Window = new HTTPFrame();
 			Window.setVisible(true);
 			Window.setSize(1000, 1000);
 		} catch (IOException e) {

@@ -47,7 +47,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>me.elahe.me.elahe.httpproxy.Server</mainClass>
+                            <mainClass>me.elahe.httpproxy.Server</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
