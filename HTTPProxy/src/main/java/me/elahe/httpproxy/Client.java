@@ -37,18 +37,14 @@ public class Client extends Thread {
 	@Override
 	public void run() {
 		try {
-
-
 			InputStream inputClient = client.getInputStream();
 			OutputStream outputClient = client.getOutputStream();
 
 			String buf = "";
-			String[] strArr;
-			String hostName = null;
-
+			String hostName = "";
 
 			int c = 0;
-			int cc = 0;
+			int emptyLinesCount = 0;
 			while (c >= 0) {
 				try {
 					c = inputClient.read();
@@ -57,11 +53,12 @@ public class Client extends Thread {
 					}
 
 					if (c == '\r' || c == '\n') {
-						cc++;
+						emptyLinesCount++;
 					} else {
-						cc = 0;
+						emptyLinesCount = 0;
 					}
-					if (cc == 4) {
+
+					if (emptyLinesCount == 4) {
 						break;
 					}
 				} catch (IOException e) {
@@ -73,12 +70,11 @@ public class Client extends Thread {
 			txtLog.append(buf);
 
 
-			String arr[] = buf.split("\r\n");
-			for (String arr1 : arr) {
-				strArr = arr1.split(" ");
-				if (strArr[0].toLowerCase().contains("host")) {
-					hostName = strArr[1];
-
+			String headers[] = buf.split("\r\n");
+			for (String header : headers) {
+				String key = header.split(" ")[0];
+				if (key.toLowerCase().contains("host")) {
+					hostName = header.split(" ")[1];
 					break;
 				}
 			}
@@ -93,9 +89,8 @@ public class Client extends Thread {
 					}
 				}
 
-				//User can get the site from this specific host
+				// User can get the site from this specific host
 				if (canDo) {
-
 					Socket soc = new Socket(hostName, 4444);
 					OutputStream output = soc.getOutputStream();
 					InputStream input = soc.getInputStream();
